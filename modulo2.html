@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2: Matriz de Risco - COMPLIANCE Ex Hub</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+        .client-name {
+            color: #3b82f6;
+        }
+        .dropdown-menu {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .risk-matrix th, .risk-matrix td {
+            border: 1px solid #e5e7eb;
+            text-align: center;
+            padding: 0.75rem;
+            min-width: 100px;
+        }
+        .risk-matrix .header-probabilidade {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            text-align: right;
+            font-weight: bold;
+        }
+        .risk-matrix .header-impacto {
+            font-weight: bold;
+        }
+        .risk-baixo { background-color: #dcfce7; color: #166534; } /* green */
+        .risk-medio { background-color: #fef08a; color: #854d0e; } /* yellow */
+        .risk-alto { background-color: #fed7aa; color: #9a3412; } /* orange */
+        .risk-extremo { background-color: #fecaca; color: #991b1b; } /* red */
+
+        /* Estilos para a nova tabela */
+        .risk-analysis-table th {
+            padding: 0.75rem 1rem;
+            background-color: #f3f4f6;
+            font-weight: 600;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        .risk-analysis-table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+        }
+        .risk-analysis-table input, .risk-analysis-table select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        .risk-analysis-table .risk-level-cell {
+            font-weight: bold;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        
+        /* Cores para Efetividade dos Controles */
+        .controls-ineficaz { background-color: #fee2e2; }
+        .controls-parcial { background-color: #fef3c7; }
+        .controls-eficaz { background-color: #dcfce7; }
+
+        /* Tooltip */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip-icon {
+            cursor: pointer;
+            margin-left: 4px;
+            color: #6b7280;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            width: 220px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <!-- =========== Header =========== -->
+    <header class="bg-sky-100 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="text-xl md:text-2xl font-bold text-gray-900">
+                        COMPLIANCE Ex Hub - <span class="client-name">COMPANHIA X</span>
+                    </a>
+                </div>
+                <nav class="hidden md:flex flex-grow justify-center items-center space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-[#003f5c] font-semibold">Início</a>
+                    <div class="relative">
+                        <button id="modules-menu-button" class="flex items-center text-gray-700 hover:text-[#003f5c] font-semibold focus:outline-none">
+                            <span>Suas Ferramentas</span>
+                            <svg class="h-5 w-5 ml-1 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        </button>
+                        <div id="modules-menu" class="dropdown-menu origin-top-right absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu">
+                            <a href="index.html#module-1" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Módulo 1</a>
+                            <a href="index.html#module-2" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Módulo 2</a>
+                        </div>
+                    </div>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block relative">
+                        <button id="notifications-menu-button" class="p-2 bg-white rounded-full text-red-500 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <span class="sr-only">Ver notificações</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        </button>
+                        <div id="notifications-menu" class="dropdown-menu origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu">
+                            <p class="p-3 text-sm font-semibold text-gray-800">Notificações</p>
+                            <div class="border-t border-gray-200"></div>
+                            <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Nova tarefa atribuída.</a>
+                        </div>
+                    </div>
+                    <div class="hidden md:block relative">
+                        <button id="user-menu-button" class="p-2 bg-white rounded-full text-gray-600 hover:text-[#003f5c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#005f73]">
+                            <span class="sr-only">Abrir menu do usuário</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                        </button>
+                        <div id="user-menu" class="dropdown-menu origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Configurações</a>
+                            <a href="#" class="logout-button block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sair</a>
+                        </div>
+                    </div>
+                    <div class="md:hidden flex items-center">
+                        <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-white hover:bg-[#005f73] focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Abrir menu principal</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden bg-sky-100 border-t border-sky-200">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Início</a>
+                    <div class="border-t border-gray-300 my-2"></div>
+                    <p class="px-3 pt-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Suas Ferramentas</p>
+                    <a href="index.html#module-1" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Módulo 1</a>
+                    <a href="index.html#module-2" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Módulo 2</a>
+                </div>
+            </div>
+        </header>
+
+    <!-- =========== Conteúdo Principal =========== -->
+    <main class="flex-grow">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            
+            <section class="text-center mb-12">
+                <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">Módulo 2: Matriz de Risco Estratégico</h1>
+                <p class="mt-4 text-xl text-gray-600">Uma ferramenta para visualizar, medir e priorizar os riscos de compliance.</p>
+            </section>
+
+            <!-- Seção de Critérios Estratégicos -->
+            <section class="mb-12 bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold text-blue-800 mb-3">CRITÉRIOS EXEMPLIFICATIVOS PARA CLASSIFICAÇÃO DE UM RISCO COMO ESTRATÉGICO (NÃO SÃO CUMULATIVOS)</h2>
+                <ol class="list-decimal list-inside space-y-2 text-blue-700" type="a">
+                    <li>Estar relacionado aos objetivos estratégicos da pasta / Prioridades do Gestor Máximo da Pasta;</li>
+                    <li>Pode ocasionar desgaste político;</li>
+                    <li>Afeta diretamente o resultado ou entrega de uma política pública;</li>
+                    <li>Ocasiona prejuízo financeiro relevante para a pasta;</li>
+                    <li>Se materializado existe uma interrupção nas operações/atividades de difícil recuperação ou de maneira irreversível;</li>
+                    <li>Afeta a imagem da Instituição.</li>
+                </ol>
+            </section>
+
+            <!-- Seção da Matriz de Risco Visual -->
+            <section class="mb-12 bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Matriz de Probabilidade vs. Impacto</h2>
+                <div class="overflow-x-auto">
+                    <table class="risk-matrix w-full border-collapse">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="header-probabilidade">Probabilidade</th>
+                                <th colspan="5" class="header-impacto">Impacto</th>
+                            </tr>
+                            <tr>
+                                <th class="header-impacto">1<br>Insignificante</th>
+                                <th class="header-impacto">2<br>Menor</th>
+                                <th class="header-impacto">3<br>Moderado</th>
+                                <th class="header-impacto">4<br>Maior</th>
+                                <th class="header-impacto">5<br>Catastrófico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold">5<br>Quase Certa</td>
+                                <td class="risk-medio">5</td>
+                                <td class="risk-alto">10</td>
+                                <td class="risk-alto">15</td>
+                                <td class="risk-extremo">20</td>
+                                <td class="risk-extremo">25</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">4<br>Provável</td>
+                                <td class="risk-baixo">4</td>
+                                <td class="risk-medio">8</td>
+                                <td class="risk-alto">12</td>
+                                <td class="risk-alto">16</td>
+                                <td class="risk-extremo">20</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">3<br>Possível</td>
+                                <td class="risk-baixo">3</td>
+                                <td class="risk-medio">6</td>
+                                <td class="risk-medio">9</td>
+                                <td class="risk-alto">12</td>
+                                <td class="risk-alto">15</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">2<br>Improvável</td>
+                                <td class="risk-baixo">2</td>
+                                <td class="risk-baixo">4</td>
+                                <td class="risk-medio">6</td>
+                                <td class="risk-medio">8</td>
+                                <td class="risk-alto">10</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">1<br>Remota</td>
+                                <td class="risk-baixo">1</td>
+                                <td class="risk-baixo">2</td>
+                                <td class="risk-baixo">3</td>
+                                <td class="risk-baixo">4</td>
+                                <td class="risk-medio">5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Seção da Tabela de Análise de Riscos -->
+            <section class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Análise de Riscos</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full risk-analysis-table whitespace-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Nome do Risco</th>
+                                <th>Setor</th>
+                                <th>Plano de Ações</th>
+                                <th>
+                                    <div class="flex items-center">
+                                        Plano de Contingência
+                                        <div class="tooltip-container">
+                                            <svg class="tooltip-icon h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+                                            <span class="tooltip-text">O apetite a risco da COMPANHIA X define se um plano de contingência é mandatório para certos níveis de risco.</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>Risco Materializado</th>
+                                <th>Efetividade Controles</th>
+                                <th>Probabilidade</th>
+                                <th>Impacto</th>
+                                <th>Nível de Risco</th>
+                            </tr>
+                        </thead>
+                        <tbody id="risk-table-body">
+                            <!-- Linha de exemplo, será clonada dinamicamente -->
+                            <tr class="risk-row">
+                                <td><input type="text" placeholder="Ex: Vazamento de dados"></td>
+                                <td>
+                                    <select class="sector">
+                                        <option>Estratégico</option>
+                                        <option>Financeiro</option>
+                                        <option>Engenharia</option>
+                                        <option>Recursos Humanos</option>
+                                        <option>TI</option>
+                                        <option>Operacional</option>
+                                        <option>Jurídico</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="action-plan">
+                                        <option>Nenhum</option>
+                                        <option>Ação 1</option>
+                                        <option>Ação 2</option>
+                                        <option>Ação 3</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="contingency-plan">
+                                        <option>N/A</option>
+                                        <option>Contingência 1</option>
+                                        <option>Contingência 2</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" min="0" max="1000" value="0" class="materialized-risk"></td>
+                                <td class="controls-effectiveness-cell">
+                                    <select class="controls-effectiveness">
+                                        <option value="3">Eficazes</option>
+                                        <option value="1">Parcialmente Eficazes</option>
+                                        <option value="0">Ineficazes</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="risk-probability">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3" selected>3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="risk-impact">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3" selected>3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </td>
+                                <td class="risk-level-cell">
+                                    <span class="score text-lg"></span><br>
+                                    <span class="level text-xs"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 text-right">
+                    <button id="add-risk-button" class="bg-sky-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors">
+                        + Adicionar Risco
+                    </button>
+                </div>
+            </section>
+
+            <!-- Seção do Gráfico de Riscos -->
+            <section class="mt-12 bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Distribuição de Riscos por Nível</h2>
+                <div class="relative h-96">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- =========== Footer =========== -->
+    <footer class="bg-white mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-gray-500">
+            <p>&copy; 2024 COMPANHIA X. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- =========== Scripts =========== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Lógica para Menus do Cabeçalho ---
+            function setupMenu(buttonId, menuId) {
+                const button = document.getElementById(buttonId);
+                const menu = document.getElementById(menuId);
+                if (!button || !menu) return;
+
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const isHidden = menu.classList.contains('hidden');
+                    document.querySelectorAll('.dropdown-menu, #mobile-menu').forEach(m => {
+                        if (m !== menu) m.classList.add('hidden');
+                    });
+                    menu.classList.toggle('hidden');
+                });
+            }
+
+            setupMenu('user-menu-button', 'user-menu');
+            setupMenu('notifications-menu-button', 'notifications-menu');
+            setupMenu('modules-menu-button', 'modules-menu');
+            setupMenu('mobile-menu-button', 'mobile-menu');
+
+            window.addEventListener('click', () => {
+                document.querySelectorAll('.dropdown-menu, #mobile-menu').forEach(m => m.classList.add('hidden'));
+            });
+
+            document.querySelectorAll('.dropdown-menu, #mobile-menu').forEach(menu => {
+                menu.addEventListener('click', (event) => event.stopPropagation());
+            });
+
+            // --- Lógica do Gráfico ---
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            let riskChart;
+
+            function initializeChart() {
+                riskChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['BAIXO', 'MÉDIO', 'ALTO', 'EXTREMO'],
+                        datasets: [{
+                            label: 'Nº de Riscos',
+                            data: [0, 0, 0, 0],
+                            backgroundColor: [
+                                'rgba(74, 222, 128, 0.6)',
+                                'rgba(250, 204, 21, 0.6)',
+                                'rgba(251, 146, 60, 0.6)',
+                                'rgba(239, 68, 68, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgb(34, 197, 94)',
+                                'rgb(234, 179, 8)',
+                                'rgb(249, 115, 22)',
+                                'rgb(220, 38, 38)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    color: '#6b7280'
+                                },
+                                grid: {
+                                    color: '#e5e7eb'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#6b7280'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Contagem de Riscos por Nível',
+                                color: '#1f2937',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateChart() {
+                if (!riskChart) return;
+                const counts = { 'BAIXO': 0, 'MÉDIO': 0, 'ALTO': 0, 'EXTREMO': 0 };
+                document.querySelectorAll('#risk-table-body .risk-row').forEach(row => {
+                    const level = row.querySelector('.level').textContent.trim();
+                    if (level in counts) {
+                        counts[level]++;
+                    }
+                });
+                riskChart.data.datasets[0].data = [counts['BAIXO'], counts['MÉDIO'], counts['ALTO'], counts['EXTREMO']];
+                riskChart.update();
+            }
+
+
+            // --- Lógica da Tabela de Análise de Risco ---
+            const tableBody = document.getElementById('risk-table-body');
+            const addRiskButton = document.getElementById('add-risk-button');
+            const firstRow = tableBody.querySelector('.risk-row');
+
+            function updateRiskRow(row) {
+                const probability = parseInt(row.querySelector('.risk-probability').value);
+                const impact = parseInt(row.querySelector('.risk-impact').value);
+                const score = probability * impact;
+
+                const scoreEl = row.querySelector('.score');
+                const levelEl = row.querySelector('.level');
+                const cellEl = row.querySelector('.risk-level-cell');
+                
+                let level = '';
+                let levelClass = '';
+
+                if (score >= 17) {
+                    level = 'EXTREMO'; levelClass = 'risk-extremo';
+                } else if (score >= 10) {
+                    level = 'ALTO'; levelClass = 'risk-alto';
+                } else if (score >= 5) {
+                    level = 'MÉDIO'; levelClass = 'risk-medio';
+                } else {
+                    level = 'BAIXO'; levelClass = 'risk-baixo';
+                }
+                
+                scoreEl.textContent = score;
+                levelEl.textContent = level;
+                
+                cellEl.className = 'risk-level-cell'; // Reset classes
+                cellEl.classList.add(levelClass);
+                updateChart(); // Atualiza o gráfico sempre que uma linha muda
+            }
+
+            function updateControlsCell(selectElement) {
+                const cell = selectElement.closest('.controls-effectiveness-cell');
+                const value = selectElement.value;
+                cell.className = 'controls-effectiveness-cell'; // Reset
+                if (value === '0') {
+                    cell.classList.add('controls-ineficaz');
+                } else if (value === '1') {
+                    cell.classList.add('controls-parcial');
+                } else if (value === '3') {
+                    cell.classList.add('controls-eficaz');
+                }
+            }
+            
+            function attachRowListeners(row) {
+                 row.querySelector('.risk-probability').addEventListener('change', () => updateRiskRow(row));
+                 row.querySelector('.risk-impact').addEventListener('change', () => updateRiskRow(row));
+                 const controlsSelect = row.querySelector('.controls-effectiveness');
+                 controlsSelect.addEventListener('change', () => updateControlsCell(controlsSelect));
+                 updateRiskRow(row);
+                 updateControlsCell(controlsSelect);
+            }
+
+            addRiskButton.addEventListener('click', () => {
+                const newRow = firstRow.cloneNode(true);
+                newRow.querySelectorAll('input').forEach(input => {
+                    if (input.type === 'text') input.value = '';
+                    if (input.type === 'number') input.value = '0';
+                });
+                newRow.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+                tableBody.appendChild(newRow);
+                attachRowListeners(newRow);
+            });
+
+            // Inicialização
+            initializeChart();
+            attachRowListeners(firstRow);
+        });
+    </script>
+</body>
+</html>
