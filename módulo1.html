@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1: Conceitos Fundamentais - COMPLIANCE Ex Hub</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+        .client-name {
+            color: #3b82f6;
+        }
+        .dropdown-menu, .accordion-content {
+            transition: all 0.3s ease-in-out;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+        }
+        .accordion-button[aria-expanded="true"] + .accordion-content {
+            max-height: 1000px; /* Adjust as needed */
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .accordion-button .accordion-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+        .accordion-button[aria-expanded="true"] .accordion-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <!-- =========== Header =========== -->
+    <header class="bg-sky-100 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="text-xl md:text-2xl font-bold text-gray-900">
+                        COMPLIANCE Ex Hub - <span class="client-name">COMPANHIA X</span>
+                    </a>
+                </div>
+                <nav class="hidden md:flex flex-grow justify-center items-center space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-[#003f5c] font-semibold">Início</a>
+                    <div class="relative">
+                        <button id="modules-menu-button" class="flex items-center text-gray-700 hover:text-[#003f5c] font-semibold focus:outline-none">
+                            <span>Suas Ferramentas</span>
+                            <svg class="h-5 w-5 ml-1 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div id="modules-menu" class="dropdown-menu origin-top-right absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu">
+                            <a href="index.html#module-1" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Módulo 1</a>
+                            <a href="index.html#module-2" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Módulo 2</a>
+                            <a href="index.html#module-3" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Módulo 3</a>
+                            <a href="index.html#module-4" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Módulo 4</a>
+                            <a href="index.html#module-5" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Módulo 5</a>
+                            <a href="index.html#module-6" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Módulo 6</a>
+                        </div>
+                    </div>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block relative">
+                        <button id="notifications-menu-button" class="p-2 bg-white rounded-full text-red-500 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <span class="sr-only">Ver notificações</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        </button>
+                        <div id="notifications-menu" class="dropdown-menu origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu">
+                            <p class="p-3 text-sm font-semibold text-gray-800">Notificações</p>
+                            <div class="border-t border-gray-200"></div>
+                            <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Nova tarefa atribuída.</a>
+                            <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Atualização de política.</a>
+                        </div>
+                    </div>
+                    <div class="hidden md:block relative">
+                        <button id="user-menu-button" class="p-2 bg-white rounded-full text-gray-600 hover:text-[#003f5c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#005f73]">
+                            <span class="sr-only">Abrir menu do usuário</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                        </button>
+                        <div id="user-menu" class="dropdown-menu origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Configurações</a>
+                            <a href="#" class="logout-button block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sair</a>
+                        </div>
+                    </div>
+                    <div class="md:hidden flex items-center">
+                        <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-white hover:bg-[#005f73] focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Abrir menu principal</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden bg-sky-100 border-t border-sky-200">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Início</a>
+                    <div class="border-t border-gray-300 my-2"></div>
+                    <p class="px-3 pt-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Suas Ferramentas</p>
+                    <a href="index.html#module-1" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Módulo 1</a>
+                    <a href="index.html#module-2" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Módulo 2</a>
+                    <div class="border-t border-gray-300 my-2"></div>
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Notificações</a>
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Configurações</a>
+                    <a href="#" class="logout-button block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-[#005f73]">Sair</a>
+                </div>
+            </div>
+        </header>
+
+    <!-- =========== Conteúdo Principal =========== -->
+    <main class="flex-grow pb-12">
+        <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            
+            <!-- Título do Módulo -->
+            <section class="text-center mb-12">
+                <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">Módulo 1: Conceitos Fundamentais</h1>
+                <p class="mt-4 text-xl text-gray-600">O alicerce para um programa de compliance sólido e eficaz.</p>
+            </section>
+
+            <!-- Secção 1: O que é Compliance? -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">O que é Compliance?</h2>
+                <p class="text-lg text-gray-700 mb-6">
+                    Compliance é o compromisso de uma organização em cumprir todas as leis, regulamentos, normas e padrões éticos aplicáveis às suas atividades. É uma função estratégica que visa proteger a empresa, os seus colaboradores e a sua reputação, garantindo que os negócios sejam conduzidos com integridade e transparência.
+                </p>
+                <div class="space-y-4" id="what-is-accordion">
+                    <!-- Item 1: Perspectiva Legal -->
+                    <div class="bg-white rounded-lg shadow">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-lg text-gray-800 focus:outline-none">
+                            <span>A Perspectiva Legal</span>
+                            <svg class="accordion-icon h-6 w-6 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div class="accordion-content px-4 text-gray-600">
+                            <p>Sob o prisma legal, compliance significa garantir a conformidade com o ordenamento jurídico. No Brasil, isso inclui, mas não se limita, à Lei Anticorrupção (Lei nº 12.846/2013), que estabelece a responsabilidade objetiva de empresas por atos de corrupção. Um programa de compliance eficaz é um fator atenuante em caso de sanções, demonstrando a boa-fé da organização.</p>
+                        </div>
+                    </div>
+                    <!-- Item 2: Perspectiva Ética -->
+                    <div class="bg-white rounded-lg shadow">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-lg text-gray-800 focus:outline-none">
+                            <span>A Perspectiva Ética</span>
+                            <svg class="accordion-icon h-6 w-6 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div class="accordion-content px-4 text-gray-600">
+                            <p>Além das leis, o compliance abrange um compromisso com os valores e princípios éticos da organização. Trata-se de "fazer a coisa certa", mesmo quando ninguém está a ver. Isso envolve criar uma cultura de integridade, onde o "Tone at the Top" (o exemplo da alta gestão) é fundamental para inspirar comportamentos éticos em todos os níveis da empresa.</p>
+                        </div>
+                    </div>
+                    <!-- Item 3: Perspectiva Estratégica -->
+                    <div class="bg-white rounded-lg shadow">
+                         <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-lg text-gray-800 focus:outline-none">
+                            <span>A Perspectiva Estratégica</span>
+                            <svg class="accordion-icon h-6 w-6 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div class="accordion-content px-4 text-gray-600">
+                           <p>Longe de ser apenas um centro de custo, o compliance é um investimento estratégico. Organizações com programas de compliance robustos são vistas como mais confiáveis por investidores, clientes e parceiros. Isso se traduz numa vantagem competitiva, melhora a reputação da marca e é um pilar essencial para a sustentabilidade do negócio a longo prazo.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Secção 2: Porque é Importante? -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Porque é Importante?</h2>
+                <div class="space-y-4" id="why-is-important-accordion">
+                     <!-- Item 1 -->
+                    <div class="bg-white rounded-lg shadow">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-lg text-gray-800 focus:outline-none">
+                            <span>Mitigação de Riscos Legais e Financeiros</span>
+                             <svg class="accordion-icon h-6 w-6 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div class="accordion-content px-4 text-gray-600">
+                           <p>A consequência mais direta da falta de compliance são as pesadas multas e sanções. A Lei Anticorrupção, por exemplo, prevê multas que podem chegar a 20% do faturamento bruto da empresa. Um programa de compliance eficaz identifica e mitiga esses riscos antes que se materializem em perdas financeiras e danos legais.</p>
+                        </div>
+                    </div>
+                     <!-- Item 2 -->
+                    <div class="bg-white rounded-lg shadow">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-lg text-gray-800 focus:outline-none">
+                            <span>Vantagem Competitiva e Reputacional</span>
+                             <svg class="accordion-icon h-6 w-6 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div class="accordion-content px-4 text-gray-600">
+                           <p>Num mercado cada vez mais consciente, a reputação é um ativo valioso. Empresas conhecidas pela sua integridade atraem mais clientes e parceiros de negócio. Um selo de "empresa limpa" ou a demonstração de um programa de compliance ativo pode ser o fator decisivo numa concorrência ou parceria estratégica.</p>
+                        </div>
+                    </div>
+                     <!-- Item 3 -->
+                    <div class="bg-white rounded-lg shadow">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-lg text-gray-800 focus:outline-none">
+                            <span>Atração e Retenção de Talentos</span>
+                             <svg class="accordion-icon h-6 w-6 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div class="accordion-content px-4 text-gray-600">
+                           <p>Os melhores profissionais procuram trabalhar em organizações que partilham os seus valores. Um ambiente de trabalho ético e transparente é um fator crucial para a satisfação e retenção de talentos, reduzindo custos com rotatividade e aumentando a produtividade.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- =========== Scripts =========== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Lógica para Menus do Cabeçalho ---
+            function setupMenu(buttonId, menuId) {
+                const button = document.getElementById(buttonId);
+                const menu = document.getElementById(menuId);
+                if (!button || !menu) return;
+
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const isHidden = menu.classList.contains('hidden');
+                    document.querySelectorAll('.dropdown-menu, #mobile-menu').forEach(m => {
+                        if (m !== menu) m.classList.add('hidden');
+                    });
+                    menu.classList.toggle('hidden');
+                });
+            }
+
+            setupMenu('user-menu-button', 'user-menu');
+            setupMenu('notifications-menu-button', 'notifications-menu');
+            setupMenu('modules-menu-button', 'modules-menu');
+            setupMenu('mobile-menu-button', 'mobile-menu');
+
+            window.addEventListener('click', () => {
+                document.querySelectorAll('.dropdown-menu, #mobile-menu').forEach(m => m.classList.add('hidden'));
+            });
+
+            document.querySelectorAll('.dropdown-menu, #mobile-menu').forEach(menu => {
+                menu.addEventListener('click', (event) => event.stopPropagation());
+            });
+
+            // --- Lógica para Acordeões ---
+            function setupAccordion(accordionId) {
+                const accordion = document.getElementById(accordionId);
+                if (!accordion) return;
+
+                const buttons = accordion.querySelectorAll('.accordion-button');
+                buttons.forEach(button => {
+                    button.setAttribute('aria-expanded', 'false');
+                    button.addEventListener('click', () => {
+                        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                        button.setAttribute('aria-expanded', !isExpanded);
+                    });
+                });
+            }
+
+            setupAccordion('what-is-accordion');
+            setupAccordion('why-is-important-accordion');
+            
+            // --- Lógica de Logout (Simulada) ---
+            document.querySelectorAll('.logout-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log("Simulando logout...");
+                    window.location.href = '#';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
