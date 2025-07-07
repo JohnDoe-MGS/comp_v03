@@ -1,1 +1,189 @@
-<link rel="stylesheet" href="css/styles.css">
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>COMPLIANCE Ex Hub - Login</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+
+        body {
+
+            font-family: 'Nunito', sans-serif;
+
+        }
+
+        .form-container {
+
+            background-color: rgba(255, 255, 255, 0.95);
+
+            backdrop-filter: blur(10px);
+
+        }
+
+    </style>
+
+</head>
+
+<body class="bg-gray-100">
+
+
+
+    <div class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');">
+
+        <div class="form-container w-full max-w-md p-8 space-y-6 rounded-xl shadow-lg">
+
+            <div class="text-center">
+
+                <h1 class="text-3xl font-extrabold text-gray-900">COMPLIANCE Ex Hub</h1>
+
+                <p class="mt-2 text-gray-600">Faça login para aceder à sua plataforma.</p>
+
+            </div>
+
+           
+
+            <form id="loginForm" class="space-y-6" action="#" method="POST">
+
+               
+
+                <div>
+
+                    <label for="email" class="text-sm font-bold text-gray-700 tracking-wide">E-mail</label>
+
+                    <input id="email" name="email" type="email" autocomplete="email" required class="w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-[#003f5c] transition-colors" placeholder="seu.email@exemplo.com">
+
+                </div>
+
+               
+
+                <div class="relative">
+
+                    <label for="password" class="text-sm font-bold text-gray-700 tracking-wide">Senha</label>
+
+                    <input id="password" name="password" type="password" autocomplete="current-password" required class="w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-[#003f5c] transition-colors pr-10" placeholder="Introduza a sua senha">
+
+                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 top-5 pr-3 flex items-center text-sm leading-5">
+
+                        <svg id="eye-open" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+
+                        </svg>
+
+                        <svg id="eye-closed" class="h-6 w-6 text-gray-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 .525-1.666 1.32-3.158 2.288-4.418M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.712 4.712A9.96 9.96 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.054 10.054 0 01-1.318 3.135m-4.135-4.135L4.712 4.712zM1 1l22 22" />
+
+                        </svg>
+
+                    </button>
+
+                </div>
+
+               
+
+                <div class="flex items-center justify-between">
+
+                    <div class="text-sm">
+
+                        <a href="#" class="font-semibold text-[#003f5c] hover:text-[#005f73]">Esqueceu a sua senha?</a>
+
+                    </div>
+
+                </div>
+
+               
+
+                <div>
+
+                    <button type="submit" class="w-full flex justify-center bg-[#003f5c] text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#005f73] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#003f5c]">
+
+                        Entrar
+
+                    </button>
+
+                </div>
+
+            </form>
+
+           
+
+            <div class="text-center mt-4">
+
+                <p class="text-gray-600">Ainda não tem uma conta? <a href="#" class="font-bold text-[#003f5c] hover:text-[#005f73]">Inscrever-se</a></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        // Impede o envio real do formulário para simular uma SPA
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+
+            e.preventDefault();
+
+            // Aqui iria a lógica de autenticação
+
+            alert('Login simulado com sucesso! Redirecionando para a página principal...');
+
+        });
+
+
+
+        // Lógica para alternar a visibilidade da senha
+
+        const togglePassword = document.getElementById('togglePassword');
+
+        const password = document.getElementById('password');
+
+        const eyeOpen = document.getElementById('eye-open');
+
+        const eyeClosed = document.getElementById('eye-closed');
+
+
+
+        togglePassword.addEventListener('click', function () {
+
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+
+            password.setAttribute('type', type);
+
+           
+
+            eyeOpen.classList.toggle('hidden');
+
+            eyeClosed.classList.toggle('hidden');
+
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>
